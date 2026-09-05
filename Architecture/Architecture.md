@@ -3,6 +3,7 @@ From Physical Warehouse to Digital Twin
 Current Architecture
 
 ![System Architecture](Architecture.png)
+<img src="Architecture.png" alt="System Architecture" width="600">
 
 Data collection starts on the warehouse floor. A handheld scanner connected to a Power Apps application on an iPad is used to capture the data. The data is then stored in a cloud-based Excel file and integrated into the Digital Twin in Power BI for analysis and visualization.
 
