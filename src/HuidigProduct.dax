@@ -1,0 +1,24 @@
+HuidigProduct = 
+VAR ProductenOpLocatie =
+    ADDCOLUMNS(
+        VALUES(LocatieMutaties[ProductCode]),
+        "AantalProduct",
+            CALCULATE(
+                SUMX(
+                    LocatieMutaties,
+                    LocatieMutaties[Richting] *
+                    LocatieMutaties[Aantal]
+                )
+            )
+    )
+VAR ActiefProduct =
+    FILTER(
+        ProductenOpLocatie,
+        [AantalProduct] > 0
+    )
+RETURN
+    CONCATENATEX(
+        ActiefProduct,
+        LocatieMutaties[ProductCode],
+        ", "
+    )
