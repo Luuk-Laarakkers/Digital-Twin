@@ -1,0 +1,46 @@
+VerwijderingGeldig = 
+VAR AanwezigVoorVerwijdering =
+    CALCULATE(
+        SUMX(
+            Mutaties_Voorraad,
+            SWITCH(
+                Mutaties_Voorraad[Mutatie],
+                "PLAATS", Mutaties_Voorraad[Aantal],
+                "VERWIJDER", -Mutaties_Voorraad[Aantal],
+                "VERPLAATS", 0,
+                0
+            )
+        ),
+        FILTER(
+            ALL(Mutaties_Voorraad),
+            Mutaties_Voorraad[Product code]
+                = EARLIER(Mutaties_Voorraad[Product code])
+            &&
+            Mutaties_Voorraad[Locatie]
+                = EARLIER(Mutaties_Voorraad[Locatie])
+            &&
+            (
+                Mutaties_Voorraad[Datum]
+                    < EARLIER(Mutaties_Voorraad[Datum])
+                ||
+                (
+                    Mutaties_Voorraad[Datum]
+                        = EARLIER(Mutaties_Voorraad[Datum])
+                    &&
+                    Mutaties_Voorraad[Mutatie ID]
+                        < EARLIER(Mutaties_Voorraad[Mutatie ID])
+                )
+            )
+        )
+    )
+
+RETURN
+    IF(
+        Mutaties_Voorraad[Mutatie] <> "VERWIJDER",
+        1,
+        IF(
+            AanwezigVoorVerwijdering >= Mutaties_Voorraad[Aantal],
+            1,
+            0
+        )
+    )
