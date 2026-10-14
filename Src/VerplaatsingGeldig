@@ -43,7 +43,7 @@ VAR AanwezigVoorVerplaatsing =
 
 RETURN
     IF(
-        Mutaties_Voorraad[Mutatie] <> "VERPLAATS",
+        MutatiesVoorraad[Mutatie] <> "VERPLAATS",
         1,
         IF(
             AanwezigVoorVerplaatsing >= Mutaties_Voorraad[Aantal],
