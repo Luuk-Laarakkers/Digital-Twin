@@ -1,0 +1,53 @@
+VerplaatsingGeldig = 
+VAR HuidigProduct =
+    Mutaties_Voorraad[Product code]
+
+VAR OudeLocatie =
+    Mutaties_Voorraad[Locatie]
+
+VAR HuidigeDatumTijd =
+    Mutaties_Voorraad[Datum]
+
+VAR HuidigID =
+    Mutaties_Voorraad[Mutatie ID]
+
+VAR AanwezigVoorVerplaatsing =
+    CALCULATE(
+        SUMX(
+            Mutaties_Voorraad,
+            SWITCH(
+                Mutaties_Voorraad[Mutatie],
+                "PLAATS", Mutaties_Voorraad[Aantal],
+                "VERWIJDER", -Mutaties_Voorraad[Aantal],
+                "VERPLAATS", 0,
+                0
+            )
+        ),
+        FILTER(
+            ALL(Mutaties_Voorraad),
+            Mutaties_Voorraad[Product code] = HuidigProduct
+                &&
+            Mutaties_Voorraad[Locatie] = OudeLocatie
+                &&
+            (
+                Mutaties_Voorraad[Datum] < HuidigeDatumTijd
+                ||
+                (
+                    Mutaties_Voorraad[Datum] = HuidigeDatumTijd
+                    &&
+                    Mutaties_Voorraad[Mutatie ID] < HuidigID
+                )
+            )
+        )
+    )
+
+RETURN
+    IF(
+        Mutaties_Voorraad[Mutatie] <> "VERPLAATS",
+        1,
+        IF(
+            AanwezigVoorVerplaatsing >= Mutaties_Voorraad[Aantal],
+            1,
+            0
+        )
+    )
