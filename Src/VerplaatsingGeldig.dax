@@ -11,6 +11,7 @@ VAR HuidigeDatumTijd =
 VAR HuidigID =
     Mutaties_Voorraad[Mutatie ID]
 
+'Checkt of een verplaatsing kan gebeuren of niet'
 VAR AanwezigVoorVerplaatsing =
     CALCULATE(
         SUMX(
